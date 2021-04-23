@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.4</version>
+		<version>2.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>java.angular.meeting</groupId>
-	<artifactId>meeting</artifactId>
+	<groupId>room.meeting</groupId>
+	<artifactId>managerapi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>meeting room</name>
-	<description>meeting room development with java spring boot and angular</description>
+	<name>managerapi</name>
+	<description>Meeting Room Manager Application</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>

@@ -1,10 +1,10 @@
-package java.angular.meeting.meeting;
+package room.meeting.managerapi;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MeetingRoomApplicationTests {
+class ManagerapiApplicationTests {
 
 	@Test
 	void contextLoads() {
