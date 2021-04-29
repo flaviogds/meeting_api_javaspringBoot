@@ -14,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/room")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class RoomController {
@@ -27,12 +29,12 @@ public class RoomController {
         return roomService.createRoom(roomDTO);
     }
 
-    @GetMapping
+    @GetMapping 
     public List<RoomDTO> listAll(){
         return roomService.listAll();
     }
 
-    @GetMapping("/date={date}")
+    @GetMapping("/?date={date}")
     public List<RoomDTO> listByDate(@PathVariable String date){
         return  roomService.listByDate(date);
     }

@@ -40,7 +40,7 @@ public class RoomService {
         List<Room> allRoom = roomRepository.findAll();
 
         return allRoom.stream()
-                .filter(meeting -> compare(meeting.getDate(), date))
+                /*.filter(meeting -> compare(meeting.getDate(), date))*/
                 .map(roomMapper::toDTO)
                 .collect(Collectors.toList());
     }

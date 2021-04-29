@@ -10,9 +10,8 @@ import room.meeting.managerapi.dto.request.RoomDTO;
 public interface RoomMapper {
     RoomMapper INSTANCE = Mappers.getMapper(RoomMapper.class);
 
-    @Mapping(target = "date",       source = "date",        dateFormat = "dd-MM-yyyy")
-    @Mapping(target = "startHour",  source = "startHour",   dateFormat = "yyyy-MM-dd HH:mm:ss.SSS")
-    @Mapping(target = "endHour",    source = "endHour",     dateFormat = "yyyy-MM-dd HH:mm:ss.SSS")
+    @Mapping(target = "startHour",  source = "startHour",   dateFormat = "HH:mm:ss")
+    @Mapping(target = "endHour",    source = "endHour",     dateFormat = "HH:mm:ss")
     Room toModel(RoomDTO roomDTO);
 
     RoomDTO toDTO(Room room);

@@ -1,7 +1,7 @@
 package room.meeting.managerapi.entity;
 
+import java.time.LocalTime;
 import java.util.List;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.Data;
@@ -33,13 +33,13 @@ public class Room {
     private String name;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Column(nullable = false)
-    private LocalDateTime startHour;
+    private LocalTime startHour;
 
     @Column(nullable = false)
-    private LocalDateTime endHour;
+    private LocalTime endHour;
 
     @Column(nullable = false)
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
