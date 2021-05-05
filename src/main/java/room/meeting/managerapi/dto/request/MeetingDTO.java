@@ -15,7 +15,7 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoomDTO {
+public class MeetingDTO {
 
     private Long id;
 
@@ -34,5 +34,8 @@ public class RoomDTO {
 
     @Valid
     @NotEmpty
-    private List<PersonDTO> invited;
+    private List<PersonDTO> guests;
+
+    @NotEmpty
+    private String status;
 }

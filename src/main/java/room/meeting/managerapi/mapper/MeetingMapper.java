@@ -3,16 +3,16 @@ package room.meeting.managerapi.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import room.meeting.managerapi.entity.Room;
-import room.meeting.managerapi.dto.request.RoomDTO;
+import room.meeting.managerapi.dto.request.MeetingDTO;
+import room.meeting.managerapi.entity.Meeting;
 
 @Mapper
-public interface RoomMapper {
-    RoomMapper INSTANCE = Mappers.getMapper(RoomMapper.class);
+public interface MeetingMapper {
+    MeetingMapper INSTANCE = Mappers.getMapper(MeetingMapper.class);
 
     @Mapping(target = "startHour",  source = "startHour",   dateFormat = "HH:mm:ss")
     @Mapping(target = "endHour",    source = "endHour",     dateFormat = "HH:mm:ss")
-    Room toModel(RoomDTO roomDTO);
+    Meeting toModel(MeetingDTO meetingDTO);
 
-    RoomDTO toDTO(Room room);
+    MeetingDTO toDTO(Meeting meeting);
 }

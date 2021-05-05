@@ -1,8 +1,8 @@
 package room.meeting.managerapi.entity;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.time.LocalDateTime;
 
 import lombok.Data;
 import lombok.Builder;
@@ -23,7 +23,7 @@ import javax.persistence.GenerationType;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Room {
+public class Meeting {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +33,7 @@ public class Room {
     private String name;
 
     @Column(nullable = false)
-    private LocalDateTime date;
+    private LocalDate date;
 
     @Column(nullable = false)
     private LocalTime startHour;
@@ -43,5 +43,8 @@ public class Room {
 
     @Column(nullable = false)
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    private List<Person> invited;
+    private List<Person> guests;
+
+    @Column(nullable = false)
+    private String status;
 }
