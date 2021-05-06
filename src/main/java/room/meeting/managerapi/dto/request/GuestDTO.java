@@ -13,7 +13,7 @@ import javax.validation.constraints.NotEmpty;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonDTO {
+public class GuestDTO {
 
     private Long id;
 

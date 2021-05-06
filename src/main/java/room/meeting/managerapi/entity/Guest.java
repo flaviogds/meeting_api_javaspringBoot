@@ -16,7 +16,7 @@ import javax.persistence.GenerationType;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Person {
+public class Guest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

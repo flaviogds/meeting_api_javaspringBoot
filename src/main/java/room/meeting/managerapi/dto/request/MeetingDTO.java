@@ -1,11 +1,11 @@
 package room.meeting.managerapi.dto.request;
 
-import java.util.List;
-
 import lombok.Data;
 import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
@@ -34,7 +34,7 @@ public class MeetingDTO {
 
     @Valid
     @NotEmpty
-    private List<PersonDTO> guests;
+    private List<GuestDTO> guests;
 
     @NotEmpty
     private String status;

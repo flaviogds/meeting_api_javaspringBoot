@@ -43,7 +43,7 @@ public class Meeting {
 
     @Column(nullable = false)
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-    private List<Person> guests;
+    private List<Guest> guests;
 
     @Column(nullable = false)
     private String status;
