@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://flaviogds.github.io/meeting_angular")
 @RequestMapping("/api/v1/meeting")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class MeetingController {
