@@ -24,7 +24,7 @@ public class MeetingService {
     public MessageResponseDTO createMeeting(MeetingDTO meetingDTO) {
         Meeting meetingToSave = meetingMapper.toModel(meetingDTO);
         Meeting savedMeeting = meetingRepository.save(meetingToSave);
-        return createMessageResponse(savedMeeting.getId(), "Created Room Meeting with ID ");
+        return createMessageResponse("Meeting created successfully");
     }
 
     public List<MeetingDTO> listAll() {
@@ -37,7 +37,7 @@ public class MeetingService {
         return list().stream()
                 .filter(meeting -> (
                         filterByDate(meeting.getDate(), start, end)
-                        && meeting.getStatus().equals(list)))
+                        && filterByStatus(meeting.getStatus(), list)))
                 .map(meetingMapper::toDTO)
                 .collect(Collectors.toList());
     }
@@ -48,13 +48,19 @@ public class MeetingService {
         Meeting meetingToUpdate = meetingMapper.toModel(meetingDTO);
         Meeting savedMeeting = meetingRepository.save(meetingToUpdate);
 
-        return createMessageResponse(savedMeeting.getId(), "Updated Details of Room Meeting with ID ");
+        return createMessageResponse("Meeting updated successfully");
     }
 
-    public void deleteById(Long id) throws MeetingNotFoundException {
+    public MessageResponseDTO deleteById(Long id) throws MeetingNotFoundException {
         verifyIfExists(id);
 
         meetingRepository.deleteById(id);
+        return createMessageResponse("Successfully deleted meeting");
+    }
+
+    private List<Meeting> list() {
+        List<Meeting> allMeeting = meetingRepository.findAll();
+        return allMeeting;
     }
 
     private Meeting verifyIfExists(Long id) throws MeetingNotFoundException {
@@ -62,9 +68,9 @@ public class MeetingService {
                 .orElseThrow(() -> new MeetingNotFoundException(id));
     }
 
-    private List<Meeting> list() {
-        List<Meeting> allMeeting = meetingRepository.findAll();
-        return allMeeting;
+    private boolean filterByStatus(String status, String list){
+        if(list.equals("all")) return true;
+        else return status.equals(list);
     }
 
     private boolean filterByDate(LocalDate date, String start, String end) {
@@ -86,10 +92,10 @@ public class MeetingService {
         return valid;
     }
 
-    private MessageResponseDTO createMessageResponse(Long id, String message) {
+    private MessageResponseDTO createMessageResponse(String message) {
         return MessageResponseDTO
                 .builder()
-                .message(message + id)
+                .message(message)
                 .build();
     }
 }

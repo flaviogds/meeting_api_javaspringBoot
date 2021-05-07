@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/v1/meeting")
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class MeetingController {
@@ -29,11 +29,13 @@ public class MeetingController {
     }
 
     @GetMapping
+    @ResponseStatus(HttpStatus.OK)
     public List<MeetingDTO> listAll(){
         return meetingService.listAll();
     }
 
     @GetMapping("/findByDate")
+    @ResponseStatus(HttpStatus.OK)
     public List<MeetingDTO> listByDate(
             @RequestParam("start") String start,
             @RequestParam(value = "end", required = false) String end,
@@ -42,6 +44,7 @@ public class MeetingController {
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public MessageResponseDTO updateById(
             @PathVariable Long id,
             @RequestBody @Valid MeetingDTO meetingDTO) throws MeetingNotFoundException {
@@ -49,8 +52,8 @@ public class MeetingController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Long id) throws MeetingNotFoundException {
-        meetingService.deleteById(id);
+    @ResponseStatus(HttpStatus.OK)
+    public MessageResponseDTO deleteById(@PathVariable Long id) throws MeetingNotFoundException {
+        return meetingService.deleteById(id);
     }
 }

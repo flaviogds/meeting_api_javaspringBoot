@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class MeetingNotFoundException extends Exception {
     public MeetingNotFoundException(Long id) {
-        super("No Meeting with ID " + id);
+        super("No meeting found with id" + id);
     }
 }
