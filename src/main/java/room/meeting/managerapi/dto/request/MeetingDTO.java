@@ -1,12 +1,13 @@
 package room.meeting.managerapi.dto.request;
 
+import java.util.List;
+
 import lombok.Data;
 import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
+import javax.persistence.Column;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.NotEmpty;
@@ -38,4 +39,13 @@ public class MeetingDTO {
 
     @NotEmpty
     private String status;
+
+    @NotEmpty
+    private Boolean publicStatus;
+
+    @NotEmpty
+    private Long authorId;
+
+    @NotEmpty
+    private String authorName;
 }

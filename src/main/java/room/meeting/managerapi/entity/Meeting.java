@@ -46,5 +46,14 @@ public class Meeting {
     private List<Guest> guests;
 
     @Column(nullable = false)
+    private Boolean publicStatus;
+
+    @Column(nullable = false)
     private String status;
+
+    @Column(nullable = false)
+    private Long authorId;
+
+    @Column(nullable = false)
+    private String authorName;
 }

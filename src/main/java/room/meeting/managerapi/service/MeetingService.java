@@ -12,66 +12,75 @@ import room.meeting.managerapi.entity.Meeting;
 import room.meeting.managerapi.dto.request.MeetingDTO;
 import room.meeting.managerapi.dto.response.MessageResponseDTO;
 import room.meeting.managerapi.mapper.MeetingMapper;
-import room.meeting.managerapi.exception.UserNotFoundException;
 import room.meeting.managerapi.exception.MeetingNotFoundException;
+import room.meeting.managerapi.repository.MeetingRepository;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class MeetingService {
-    private final UserService userService;
+    private final MeetingRepository meetingRepository;
     private final MeetingMapper meetingMapper = MeetingMapper.INSTANCE;
 
     public List<MeetingDTO> listAllPublicMeeting() {
-        return null;
-    }
-
-    public List<MeetingDTO> listAll(Long UserId) {
-        return list(UserId);
-    }
-
-    public List<MeetingDTO> listByDate(Long UserId, String start, String end, String list) {
-        return list(UserId).stream()
-                .filter(meeting -> (
-                        filterByDate(meeting.getDate(), start, end)
-                        && filterByStatus(meeting.getStatus(), list)))
+        return list()
+                .stream()
+                .filter(Meeting::getPublicStatus)
+                .map(meetingMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public MessageResponseDTO createMeeting(Long userId, MeetingDTO meetingDTO) {
-        Meeting meeting = meetingMapper.toModel((meetingDTO));
-        userService.addMeeting(userId, meeting);
+    public List<MeetingDTO> listAll(Long userId) {
+        return list()
+                .stream()
+                .filter(meeting -> meeting.getAuthorId().equals(userId))
+                .map(meetingMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 
+    public List<MeetingDTO> listByDate(Long userId, String start, String end, String list) {
+        return list()
+                .stream()
+                .filter(meeting -> (
+                        meeting.getAuthorId().equals(userId)
+                        && filterByDate(meeting.getDate(), start, end)
+                        && filterByStatus(meeting.getStatus(), list)))
+                .map(meetingMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public MessageResponseDTO createMeeting(MeetingDTO meetingDTO) {
+        Meeting meeting = meetingMapper.toModel((meetingDTO));
+        meetingRepository.save(meeting);
         return createMessageResponse("Meeting created successfully");
     }
 
     public MessageResponseDTO updateById(Long userId, Long id, MeetingDTO meetingDTO) throws MeetingNotFoundException {
         Meeting meetingToUpdate = meetingMapper.toModel((meetingDTO));
-        Meeting oldMeeting = meetingMapper.toModel(verifyIfExists(userId, id));
-        userService.updateMeeting(userId, oldMeeting, meetingToUpdate);
-        return createMessageResponse("Meeting updated successfully");
+        if(userId.equals(meetingToUpdate.getAuthorId())){
+            verifyIfExists(id);
+            meetingRepository.save(meetingToUpdate);
+            return createMessageResponse("Meeting updated successfully");
+        }
+        else return createMessageResponse("Permission denied to update meeting");
     }
 
     public MessageResponseDTO deleteById(Long userId, Long id) throws MeetingNotFoundException {
-        Meeting meetingToDelete = meetingMapper.toModel(verifyIfExists(userId, id));
-        userService.deleteMeeting(userId, meetingToDelete);
-        return createMessageResponse("Successfully deleted meeting");
+        Meeting meetingToDelete = verifyIfExists(id);
+
+        if(userId.equals(meetingToDelete.getAuthorId())){
+            meetingRepository.deleteById(id);
+            return createMessageResponse("Successfully deleted meeting");
+        }
+        else return createMessageResponse("Permission denied to delete meeting");
     }
 
-    private MeetingDTO verifyIfExists(Long userId, Long id) throws MeetingNotFoundException {
-        return list(userId)
-                .stream()
-                .filter(mee -> mee.getId().equals(id))
-                .findAny()
+    private Meeting verifyIfExists(Long id) throws MeetingNotFoundException {
+        return meetingRepository.findById(id)
                 .orElseThrow(() -> new MeetingNotFoundException(id));
     }
 
-    private List<MeetingDTO> list(Long UserId) {
-        try {
-            return userService.findByUserId(UserId).getMeeting();
-        } catch (UserNotFoundException err) {
-            err.printStackTrace();
-            return null;
-        }
+    private List<Meeting> list() {
+        return meetingRepository.findAll();
     }
 
     private boolean filterByStatus(String status, String list){
@@ -79,23 +88,17 @@ public class MeetingService {
         else return status.equals(list);
     }
 
-    private boolean filterByDate(String meetingDate, String start, String end) {
+    private boolean filterByDate(LocalDate date, String start, String end) {
         boolean valid = false;
-        LocalDate date = LocalDate.parse(meetingDate);
         LocalDate startDate = LocalDate.parse(start);
 
         if(end != null && !end.isEmpty()){
             LocalDate endDate = LocalDate.parse(end);
+            valid = (date.isEqual(startDate) || date.isAfter(startDate))
+                    && (date.isEqual(endDate) || date.isBefore(endDate));
+        }
+        else valid = date.isEqual(startDate);
 
-            if((date.isEqual(startDate) || date.isAfter(startDate))
-                    && (date.isEqual(endDate) || date.isBefore(endDate))){
-                valid = true;
-            }
-            else valid = false;
-        }
-        else{
-            if(date.isEqual(startDate)) valid = true;
-        }
         return valid;
     }
 

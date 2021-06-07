@@ -2,41 +2,65 @@ package room.meeting.managerapi.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import room.meeting.managerapi.dto.request.UserProfileDTO;
+import room.meeting.managerapi.dto.response.MessageResponseDTO;
+import room.meeting.managerapi.exception.UserNotFoundException;
+import room.meeting.managerapi.security.SecurityConstants;
+import room.meeting.managerapi.service.UserService;
 
 @RestController
-@RequestMapping("/api/v2/user")
+@RequestMapping(SecurityConstants.API_URL)
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class UserController {
 
-    @GetMapping
+    private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @GetMapping("/validate")
     @CrossOrigin(origins = "*")
-    public String getByUserName(){
-        return "getByName";
+    public Boolean validateUsernameOrEmail(
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "email", required = false) String email) {
+        return userService.validateUsernameOrEmail(username, email);
     }
 
-    @GetMapping
+    @GetMapping("/user_profile")
     @CrossOrigin(origins = "*")
-    public String getUserByEmail(){
-        return "getByEmail";
+    public UserProfileDTO findByUsernameOrEmail(
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "email", required = false) String email) {
+        return userService.findByUsernameOrEmail(username, email);
     }
 
-    @PostMapping
+    @PostMapping("/register")
     @CrossOrigin(origins = "*")
-    public String createUser(){
-        return "createNewUser";
+    public MessageResponseDTO createUser(@RequestBody UserProfileDTO userProfileDTO){
+        userProfileDTO.setAuthentication(bCryptPasswordEncoder.encode(userProfileDTO.getAuthentication()));
+        return userService.createUser(userProfileDTO);
     }
 
-    @PutMapping
+    @PutMapping("/{user}")
     @CrossOrigin(origins = "*")
-    public String updateUserProfile(){
-        return "updateUserProfile";
+    public MessageResponseDTO updateUserProfile(@PathVariable Long user, @RequestBody UserProfileDTO userProfileDTO) throws UserNotFoundException {
+        return userService.updateById(user, userProfileDTO);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{user}")
     @CrossOrigin(origins = "*")
-    public String deleteAccount(){
-        return "deleteUserAccount";
+    public MessageResponseDTO deleteAccount(@PathVariable Long user) throws UserNotFoundException {
+        return userService.deleteById(user);
     }
 
 }

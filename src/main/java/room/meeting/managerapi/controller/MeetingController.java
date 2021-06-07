@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import room.meeting.managerapi.dto.request.MeetingDTO;
-import room.meeting.managerapi.exception.UserNotFoundException;
-import room.meeting.managerapi.service.MeetingService;
 import room.meeting.managerapi.dto.response.MessageResponseDTO;
+import room.meeting.managerapi.security.SecurityConstants;
+import room.meeting.managerapi.service.MeetingService;
 import room.meeting.managerapi.exception.MeetingNotFoundException;
 
 import javax.validation.Valid;
@@ -26,28 +27,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @RestController
-@RequestMapping("/api/v2/meeting")
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@RequestMapping(SecurityConstants.API_URL)
+@AllArgsConstructor(onConstructor = @__(@Autowired))    //https://flaviogds.github.io
 public class MeetingController {
 
     private final MeetingService meetingService;
 
-    @GetMapping
-    @CrossOrigin(origins = "https://flaviogds.github.io")
+    @GetMapping("/public")
+    @CrossOrigin(origins = "*")
     @ResponseStatus(HttpStatus.OK)
     public List<MeetingDTO> listAllPublicMeeting(){
         return meetingService.listAllPublicMeeting();
     }
 
     @GetMapping("/{user}")
-    @CrossOrigin(origins = "https://flaviogds.github.io")
+    @CrossOrigin(origins = "*")
     @ResponseStatus(HttpStatus.OK)
     public List<MeetingDTO> listAll(@PathVariable Long user){
         return meetingService.listAll(user);
     }
 
     @GetMapping("/{user}/findByDate")
-    @CrossOrigin(origins = "https://flaviogds.github.io")
+    @CrossOrigin(origins = "*")
     @ResponseStatus(HttpStatus.OK)
     public List<MeetingDTO> listByDate(
             @PathVariable Long user,
@@ -57,17 +58,16 @@ public class MeetingController {
         return  meetingService.listByDate(user, start, end, list);
     }
 
-    @PostMapping("/{user}/create")
-    @CrossOrigin(origins = "https://flaviogds.github.io")
+    @PostMapping("/create")
+    @CrossOrigin(origins = "*")
     @ResponseStatus(HttpStatus.CREATED)
     public MessageResponseDTO createMeeting(
-            @PathVariable Long user,
             @RequestBody @Valid MeetingDTO meetingDTO) {
-        return meetingService.createMeeting(user, meetingDTO);
+        return meetingService.createMeeting(meetingDTO);
     }
 
     @PutMapping("/{user}/{id}")
-    @CrossOrigin(origins = "https://flaviogds.github.io")
+    @CrossOrigin(origins = "*")
     @ResponseStatus(HttpStatus.OK)
     public MessageResponseDTO updateById(
             @PathVariable Long user,
@@ -77,7 +77,7 @@ public class MeetingController {
     }
 
     @DeleteMapping("/{user}/{id}")
-    @CrossOrigin(origins = "https://flaviogds.github.io")
+    @CrossOrigin(origins = "*")
     @ResponseStatus(HttpStatus.OK)
     public MessageResponseDTO deleteById(
                 @PathVariable Long user,

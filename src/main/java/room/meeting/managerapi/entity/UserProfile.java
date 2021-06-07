@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 import javax.persistence.GenerationType;
-import javax.validation.Valid;
 
 import lombok.Data;
 import lombok.Builder;
@@ -35,17 +34,8 @@ public class UserProfile {
     public String email;
 
     @Column(nullable = false, unique = true)
-    public String userName;
+    public String username;
 
     @Column(nullable = false)
-    public String auth_hash;
-
-    @OneToMany(
-            fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE,
-                    CascadeType.REMOVE
-            })
-    public List<Meeting> meeting;
+    public String authentication;
 }
